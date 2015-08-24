@@ -18,7 +18,7 @@ namespace PluginExample
 		private static Entity[] Entities
 		{
 			// Get the Game.Entities, you need to clone it to avoid errors
-			get { return Helper.DeepClone<Dictionary<int, Entity>>(Game.Entities).Values.ToArray<Entity>(); }
+			get { return Helper.DeepClone<Dictionary<int, Entity>>(Core.Game.Entities).Values.ToArray<Entity>(); }
 		}
 
 		private static Entity PlayerEntity
