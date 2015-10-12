@@ -20,8 +20,11 @@ namespace PluginExample
 
 		private static Entity[] Entities
 		{
-			// Get the Game.Entities, you need to clone it to avoid errors
-			get { return Helper.DeepClone<Dictionary<int, Entity>>(Core.Game.Entities).Values.ToArray<Entity>(); }
+			// Get the Game.Entities
+			get { 
+				return Helper.DeepClone<Dictionary<int, Entity>>(
+					Hearthstone_Deck_Tracker.API.Core.Game.Entities).Values.ToArray<Entity>();
+			}
 		}
 
 		private static Entity PlayerEntity
@@ -56,7 +59,7 @@ namespace PluginExample
 			image.Source = bi;
 
 			// Get the HDT Overlay canvas object
-			var canvas = Core.OverlayCanvas;
+			var canvas = Hearthstone_Deck_Tracker.API.Core.OverlayCanvas;
 			// Get canvas centre
 			var fromTop = canvas.Height / 2;
 			var fromLeft = canvas.Width / 2;
