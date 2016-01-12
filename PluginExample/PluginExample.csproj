@@ -32,9 +32,11 @@
   <ItemGroup>
     <Reference Include="HearthDb">
       <HintPath>..\..\source\Hearthstone Deck Tracker\bin\Debug\HearthDb.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="HearthstoneDeckTracker">
       <HintPath>..\..\source\Hearthstone Deck Tracker\bin\Debug\HearthstoneDeckTracker.exe</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -49,14 +51,18 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MyCode.cs" />
-    <Compile Include="MyPlugin.cs" />
+    <Compile Include="Curvy.cs" />
+    <Compile Include="CurvyList.xaml.cs">
+      <DependentUpon>CurvyList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CurvyPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="card.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Page Include="CurvyList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -4,11 +4,11 @@ using Hearthstone_Deck_Tracker.Plugins;
 
 namespace PluginExample
 {
-	public class MyPlugin : IPlugin
+	public class CurvyPlugin : IPlugin
 	{
 		public string Author
 		{
-			get { return "Name"; }
+			get { return "andburn"; }
 		}
 
 		public string ButtonText
@@ -18,7 +18,7 @@ namespace PluginExample
 
 		public string Description
 		{
-			get { return "Description"; }
+			get { return "An simple example plugin showing oppoents class cards on curve."; }
 		}
 
 		public MenuItem MenuItem
@@ -28,7 +28,7 @@ namespace PluginExample
 
 		public string Name
 		{
-			get { return "PluginExample"; }
+			get { return "Curvy"; }
 		}
 
 		public void OnButtonPress()
@@ -37,7 +37,9 @@ namespace PluginExample
 
 		public void OnLoad()
 		{
-			MyCode.Load();
+			//MyCode.Load();
+			var canvas = Hearthstone_Deck_Tracker.API.Core.OverlayCanvas;
+			canvas.Children.Add(new CurvyList());
 		}
 
 		public void OnUnload()
@@ -50,7 +52,7 @@ namespace PluginExample
 
 		public Version Version
 		{
-			get { return new Version(0, 0, 3); }
+			get { return new Version(0, 1, 0); }
 		}
 	}
 }
