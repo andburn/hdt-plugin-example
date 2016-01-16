@@ -1,110 +1,116 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using HearthDb.Enums;
 using Hearthstone_Deck_Tracker;
-using Hearthstone_Deck_Tracker.API;
+using Hearthstone_Deck_Tracker.Enums;
 using Hearthstone_Deck_Tracker.Hearthstone;
 using Hearthstone_Deck_Tracker.Hearthstone.Entities;
-using Hearthstone_Deck_Tracker.Utility.Logging;
+using CoreAPI = Hearthstone_Deck_Tracker.API.Core;
 
 namespace PluginExample
 {
-	public class MyCode
+	internal class Curvy
 	{
-		private static TextBlock _info;
-		private static int? _player;
+		private int _opponentId = -1;
+		private int _mana = 0;
+		private CurvyList _list = null;
 
-		private static Entity[] Entities
+		public Curvy()
 		{
-			// Get the Game.Entities
-			get
+			_list = new CurvyList();
+		}
+
+		public Curvy(CurvyList list)
+		{
+			_list = list;
+		}
+
+		internal List<Entity> Entities =>
+			Helper.DeepClone<Dictionary<int, Entity>>(CoreAPI.Game.Entities).Values.ToList<Entity>();
+
+		internal Entity Opponent => Entities?.FirstOrDefault(x => x.IsOpponent);
+
+		internal void NewGame()
+		{
+			// TODO wait until found?
+			Entity opp = null;
+			while (opp == null)
 			{
-				return Helper.DeepClone<Dictionary<int, Entity>>(
-					Hearthstone_Deck_Tracker.API.Core.Game.Entities).Values.ToArray<Entity>();
+				opp = Opponent;
+				_opponentId = opp.GetTag(GameTag.CONTROLLER);
 			}
 		}
 
-		private static Entity PlayerEntity
+		internal void InMenu()
 		{
-			// Get the Entity representing the player, there is also the equivalent for the Opponent
-			get { return Entities == null ? null : Entities.First(x => x.IsPlayer); }
-		}
-
-		public static void Load()
-		{
-			_player = null;
-
-			// A border to put around the text block
-			Border blockBorder = new Border();
-			blockBorder.BorderBrush = Brushes.Black;
-			blockBorder.BorderThickness = new Thickness(1.0);
-			blockBorder.Padding = new Thickness(8.0);
-
-			// A text block using the HS font
-			_info = new TextBlock();
-			_info.Text = "";
-			_info.FontSize = 18;
-
-			// Add the text block as a child of the border element
-			blockBorder.Child = _info;
-
-			// Create an image at the corner of the text bloxk
-			Image image = new Image();
-			// Create the image source
-			BitmapImage bi = new BitmapImage(new Uri("pack://siteoforigin:,,,/Plugins/card.png"));
-			// Set the image source
-			image.Source = bi;
-
-			// Get the HDT Overlay canvas object
-			var canvas = Hearthstone_Deck_Tracker.API.Core.OverlayCanvas;
-			// Get canvas centre
-			var fromTop = canvas.Height / 2;
-			var fromLeft = canvas.Width / 2;
-			// Give the text block its position within the canvas, roughly in the center
-			Canvas.SetTop(blockBorder, fromTop);
-			Canvas.SetLeft(blockBorder, fromLeft);
-			// Give the text block its position within the canvas
-			Canvas.SetTop(image, fromTop - 12);
-			Canvas.SetLeft(image, fromLeft - 12);
-			// Add the text block and image to the canvas
-			canvas.Children.Add(blockBorder);
-			canvas.Children.Add(image);
-
-			// Register methods to be called when GameEvents occur
-			GameEvents.OnGameStart.Add(NewGame);
-			GameEvents.OnPlayerDraw.Add(HandInfo);
-		}
-
-		// Set the player controller id, used to tell who controls a particular
-		// entity (card, health etc.)
-		private static void NewGame()
-		{
-			_player = null;
-			if (PlayerEntity != null)
-				_player = PlayerEntity.GetTag(GameTag.CONTROLLER);
-		}
-
-		// Find all cards in the players hand and write to the text block
-		public static void HandInfo(Card c)
-		{
-			_info.Text = "";
-
-			if (_player == null)
-				NewGame();
-
-			foreach (var e in Entities)
+			if (Config.Instance.HideInMenu)
 			{
-				if (e.IsInHand && e.GetTag(GameTag.CONTROLLER) == _player)
+				_list.Hide();
+			}
+		}
+
+		internal void TurnStart(ActivePlayer player)
+		{
+			if (player == ActivePlayer.Player)
+			{
+				if (Opponent != null)
 				{
-					_info.Text += e.Card + "\n";
-					Log.Info(e.Card.ToString());
+					_list.Show();
+					var mana = AvailableMana();
+					var klass = KlassConverter(CoreAPI.Game.Opponent.Class);
+					var cards = HearthDb.Cards.Collectible.Values
+						.Where(c => c.Cost == mana && c.Class == klass)
+						.Select(c => new Card(c)).ToList<Card>();
+					_list.Update(cards);
 				}
 			}
+		}
+
+		internal CardClass KlassConverter(string klass)
+		{
+			switch (klass.ToLowerInvariant())
+			{
+				case "druid":
+					return CardClass.DRUID;
+
+				case "hunter":
+					return CardClass.HUNTER;
+
+				case "mage":
+					return CardClass.MAGE;
+
+				case "paladin":
+					return CardClass.PALADIN;
+
+				case "priest":
+					return CardClass.PRIEST;
+
+				case "rogue":
+					return CardClass.ROGUE;
+
+				case "shaman":
+					return CardClass.SHAMAN;
+
+				case "warlock":
+					return CardClass.WARLOCK;
+
+				case "warrior":
+					return CardClass.WARRIOR;
+
+				default:
+					return CardClass.NEUTRAL;
+			}
+		}
+
+		internal int AvailableMana()
+		{
+			if (Opponent != null)
+			{
+				var mana = Opponent.GetTag(GameTag.RESOURCES);
+				var overload = Opponent.GetTag(GameTag.OVERLOAD_OWED);
+				_mana = mana + 1 - overload;
+			}
+			return _mana;
 		}
 	}
 }
