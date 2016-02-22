@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Windows.Controls;
-
 using Hearthstone_Deck_Tracker.Plugins;
 
 namespace PluginExample
 {
-    public class MyPlugin : IPlugin
-    {
+	public class MyPlugin : IPlugin
+	{
 		public string Author
 		{
 			get { return "Name"; }
@@ -51,7 +50,7 @@ namespace PluginExample
 
 		public Version Version
 		{
-			get { return new Version(0, 0, 2); }
+			get { return new Version(0, 0, 3); }
 		}
-    }
+	}
 }

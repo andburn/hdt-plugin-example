@@ -10,6 +10,7 @@ A text box in the center of the screen displays the names of the cards currently
 ![Add Reference](http://i.imgur.com/LLpgkOH.png)
 
 and then set that references *Copy Local* property to false.
+- Add another reference for the `HearthDB.dll` found in the same directory as the Hearthstone Deck Tracker executable.
 
 ![Copy Local](http://i.imgur.com/bhdqQ0T.png)
 - You should then be able to build the plugin successfully.
