@@ -11,18 +11,15 @@ namespace PluginExample
 {
 	internal class Curvy
 	{
-		private int _opponentId = -1;
 		private int _mana = 0;
 		private CurvyList _list = null;
-
-		public Curvy()
-		{
-			_list = new CurvyList();
-		}
 
 		public Curvy(CurvyList list)
 		{
 			_list = list;
+			// Hide in menu, if necessary
+			if (Config.Instance.HideInMenu && CoreAPI.Game.IsInMenu)
+				_list.Hide();
 		}
 
 		internal List<Entity> Entities =>
@@ -30,17 +27,14 @@ namespace PluginExample
 
 		internal Entity Opponent => Entities?.FirstOrDefault(x => x.IsOpponent);
 
-		internal void NewGame()
+		// Reset on when a new game starts
+		internal void GameStart()
 		{
-			// TODO wait until found?
-			Entity opp = null;
-			while (opp == null)
-			{
-				opp = Opponent;
-				_opponentId = opp.GetTag(GameTag.CONTROLLER);
-			}
+			_mana = 0;
+			_list.Update(new List<Card>());
 		}
 
+		// Need to handle hiding the element when in the game menu
 		internal void InMenu()
 		{
 			if (Config.Instance.HideInMenu)
@@ -49,23 +43,38 @@ namespace PluginExample
 			}
 		}
 
+		// Update the card list on player's turn
 		internal void TurnStart(ActivePlayer player)
 		{
-			if (player == ActivePlayer.Player)
+			if (player == ActivePlayer.Player && Opponent != null)
 			{
-				if (Opponent != null)
-				{
-					_list.Show();
-					var mana = AvailableMana();
-					var klass = KlassConverter(CoreAPI.Game.Opponent.Class);
-					var cards = HearthDb.Cards.Collectible.Values
-						.Where(c => c.Cost == mana && c.Class == klass)
-						.Select(c => new Card(c)).ToList<Card>();
-					_list.Update(cards);
-				}
+				_list.Show();
+				var mana = AvailableMana();
+				var klass = KlassConverter(CoreAPI.Game.Opponent.Class);
+				var cards = HearthDb.Cards.Collectible.Values
+					.Where(c => c.Cost == mana && c.Class == klass)
+					.Select(c => new Card(c))
+					.OrderBy(c => c.Rarity)
+					.ToList<Card>();
+				_list.Update(cards);
 			}
 		}
 
+		// Calculate the mana opponent will have on his next turn
+		internal int AvailableMana()
+		{
+			var opp = Opponent;
+			if (opp != null)
+			{
+				var mana = opp.GetTag(GameTag.RESOURCES);
+				var overload = opp.GetTag(GameTag.OVERLOAD_OWED);
+				// looking a turn ahead, so add one mana
+				_mana = mana + 1 - overload;
+			}
+			return _mana;
+		}
+
+		// Convert hero class string to enum
 		internal CardClass KlassConverter(string klass)
 		{
 			switch (klass.ToLowerInvariant())
@@ -100,17 +109,6 @@ namespace PluginExample
 				default:
 					return CardClass.NEUTRAL;
 			}
-		}
-
-		internal int AvailableMana()
-		{
-			if (Opponent != null)
-			{
-				var mana = Opponent.GetTag(GameTag.RESOURCES);
-				var overload = Opponent.GetTag(GameTag.OVERLOAD_OWED);
-				_mana = mana + 1 - overload;
-			}
-			return _mana;
 		}
 	}
 }

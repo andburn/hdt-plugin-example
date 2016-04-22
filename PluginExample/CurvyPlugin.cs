@@ -7,6 +7,8 @@ namespace PluginExample
 {
 	public class CurvyPlugin : IPlugin
 	{
+		private CurvyList _list;
+
 		public string Author
 		{
 			get { return "andburn"; }
@@ -19,7 +21,7 @@ namespace PluginExample
 
 		public string Description
 		{
-			get { return "An simple example plugin showing oppoents class cards on curve."; }
+			get { return "A simple example plugin showing the oppoents class cards on curve."; }
 		}
 
 		public MenuItem MenuItem
@@ -38,16 +40,18 @@ namespace PluginExample
 
 		public void OnLoad()
 		{
-			var canvas = Hearthstone_Deck_Tracker.API.Core.OverlayCanvas;
-			var curvyList = new CurvyList();
-			canvas.Children.Add(curvyList);
-			Curvy curvy = new Curvy(curvyList);
+			_list = new CurvyList();
+			Core.OverlayCanvas.Children.Add(_list);
+			Curvy curvy = new Curvy(_list);
+
+			GameEvents.OnGameStart.Add(curvy.GameStart);
 			GameEvents.OnInMenu.Add(curvy.InMenu);
 			GameEvents.OnTurnStart.Add(curvy.TurnStart);
 		}
 
 		public void OnUnload()
 		{
+			Core.OverlayCanvas.Children.Remove(_list);
 		}
 
 		public void OnUpdate()
