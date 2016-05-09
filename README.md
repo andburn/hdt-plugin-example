@@ -6,14 +6,16 @@ It displays your opponent's on curve class cards for his next turn.
 
 ## Building the Plugin
 
-- Double clicking `PluginExample.sln` will open the project in Visual Studio.
-- First thing to do is add a reference to the location of your Hearthstone Deck Tracker executable
+- To build the plugin you first need to build a development version of [Hearthstone Deck Tracker](https://github.com/Epix37/Hearthstone-Deck-Tracker), this should be as simple as getting the source from github and opening and building the project in Visual Studio.
+- The next step is to build the plugin, double clicking `PluginExample.sln` will open the project in Visual Studio.
+- First thing to do is add a reference to the location of your Hearthstone Deck Tracker executable (compiled in the first step).
 
 ![Add Reference](http://i.imgur.com/LLpgkOH.png)
 
 and then set that references *Copy Local* property to false.
-- Add another reference for the `HearthDB.dll` found in the same directory as the Hearthstone Deck Tracker executable.
 
-![Copy Local](http://i.imgur.com/bhdqQ0T.png)
+![Copy Local](http://i.imgur.com/kbiMhko.png)
+
+- Add another reference for the `HearthDB.dll` found in the same directory as the Hearthstone Deck Tracker executable.
 - You should then be able to build the plugin successfully.
-- Go to your `PluginExample\bin\Release` folder and copy `PluginExample.dll` and `card.png` to the Hearthstone Deck Tracker Plugins folder.
+- Go to your `PluginExample\bin\Release` folder and copy `PluginExample.dll` to the Hearthstone Deck Tracker Plugins folder.
