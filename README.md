@@ -1,4 +1,6 @@
-# HDT Plugin Example  [![Github Releases](https://img.shields.io/badge/plugin-HDT-e6af2b.svg)](https://github.com/HearthSim/Hearthstone-Deck-Tracker?maxAge=2592000) [![GitHub release](https://img.shields.io/github/release/andburn/hdt-plugin-example.svg?maxAge=604800)](https://github.com/andburn/hdt-plugin-example/releases/latest)
+# HDT Plugin Example 
+
+ [![GitHub release](https://img.shields.io/github/release/andburn/hdt-plugin-example.svg?maxAge=604800)](https://github.com/andburn/hdt-plugin-example/releases/latest)
 
 A simple plugin for [Hearthstone Deck Tracker](https://github.com/Epix37/Hearthstone-Deck-Tracker) to illustrate some basic functionality and how to get started.
 It displays your opponent's on curve class cards for his next turn.

@@ -16,7 +16,7 @@ namespace PluginExample
 
 		public string ButtonText
 		{
-			get { return "Setttings"; }
+			get { return "Settings"; }
 		}
 
 		public string Description
@@ -60,7 +60,7 @@ namespace PluginExample
 
 		public Version Version
 		{
-			get { return new Version(0, 1, 0); }
+			get { return new Version(0, 1, 1); }
 		}
 	}
 }

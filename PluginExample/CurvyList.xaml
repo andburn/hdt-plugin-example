@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:PluginExample"
-             xmlns:hdt="clr-namespace:Hearthstone_Deck_Tracker.Controls;assembly=HearthstoneDeckTracker"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <ItemsControl.ItemContainerStyle>
@@ -14,7 +13,7 @@
     </ItemsControl.ItemContainerStyle>
     <ItemsControl.ItemTemplate>
         <DataTemplate>
-            <hdt:Card></hdt:Card>
+            <Rectangle Fill="{Binding Background}" Height="34" Width="217" />
         </DataTemplate>
     </ItemsControl.ItemTemplate>
 </ItemsControl>
