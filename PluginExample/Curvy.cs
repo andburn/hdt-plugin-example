@@ -52,7 +52,7 @@ namespace PluginExample
 				var mana = AvailableMana();
 				var klass = KlassConverter(CoreAPI.Game.Opponent.Class);
 				var cards = HearthDb.Cards.Collectible.Values
-					.Where(c => c.Cost == mana && c.Class == klass)
+					.Where(c => c.Cost == mana && c.Class == klass && c.Set == CardSet.CORE)
 					.Select(c => new Card(c))
 					.OrderBy(c => c.Rarity)
 					.ToList<Card>();
